@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 
 public class ServerHub implements Runnable{
+	static final long BILLION = 1_000_000_000;
+	
 	private boolean isRunning;
 	private Thread serverThread;
 	private ArrayList<Match> matchList;
@@ -35,11 +37,38 @@ public class ServerHub implements Runnable{
 	
 	@Override
 	public void run() {
-		ServerRunner.test += 1;
+		long ticksPerSecond = 60;
+		double nanoSecondsPerTick = BILLION/ticksPerSecond;
+		long timeAtLastTick = System.nanoTime();
+		long nanoSecondsElapsed = 0;
+		
+		int numTicksInSecond = 0;
+		long timeSinceLastSecond = System.nanoTime();
+		long now;
 		while(isRunning) {
-			//Check for user input
+			now = System.nanoTime();
+			nanoSecondsElapsed += now-timeAtLastTick;
+			timeAtLastTick = now;
+			while(nanoSecondsElapsed >= nanoSecondsPerTick){
+				nanoSecondsElapsed -= nanoSecondsPerTick;
+				tick();
+				timeAtLastTick = System.nanoTime();
+				numTicksInSecond++;
+			}
+			
+			if(System.nanoTime() -  timeSinceLastSecond >= BILLION){
+				timeSinceLastSecond = System.nanoTime();
+				if(Settings.debug)
+					System.out.println("Ticks Per Second: " + numTicksInSecond);
+				numTicksInSecond = 0;
+			}
+			
 		}
 		
+		
+	}
+	
+	private void tick(){
 		
 	}
 }

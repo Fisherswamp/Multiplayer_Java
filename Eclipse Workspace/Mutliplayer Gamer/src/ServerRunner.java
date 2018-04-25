@@ -8,15 +8,6 @@ public class ServerRunner {
 		
 		
 		server.start();
-		test += 1;
-		try {
-			server.stop();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println(test);
 		
 	}
 
