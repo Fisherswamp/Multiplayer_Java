@@ -1,0 +1,27 @@
+Incoming Data[Data going TO server FROM client]
+
+Input Types:
+User Interaction
+    Signup
+    Login
+    Logout
+    Join Lobby
+    Leave Lobby
+Game Interaction
+    Key input
+    Message/chat input
+    Mouse input 
+
+IF[login OR signup]
+    8 Bits Representing login input
+    Appropriate number of bits to store a username
+    Appropriate number of bits to store a hashed password
+    
+ELSE
+8 Bits Representing Different inputs (2^8 = 256 Possible)
+16 Bits Representing Player Unique ID (2^16 = 65,536 Possible)
+    IF[Game Interaction: Mouse input]
+        64 Bits for mouse x
+        64 Bits for mouse y
+    IF[Game Interation: Message]
+        Appropriate number of bits for message
