@@ -47,10 +47,6 @@ public class ServerHub implements Runnable{
 		};
 	}
 	
-	private void processClientInput(Socket clientSocket){
-		
-	}
-	
 	
 	/**
 	 * Starts the server
@@ -69,7 +65,7 @@ public class ServerHub implements Runnable{
 		
 		serverThread = new Thread(this);
 		serverThread.start();
-		receivePackets();
+		//receivePackets();
 		isRunning = true;
 		return true;
 	}
@@ -106,7 +102,7 @@ public class ServerHub implements Runnable{
 			while(nanoSecondsElapsed >= nanoSecondsPerTick){
 				nanoSecondsElapsed -= nanoSecondsPerTick;
 				tick();
-				timeAtLastTick = System.nanoTime();
+				//timeAtLastTick = System.nanoTime();
 				numTicksInSecond++;
 			}
 			

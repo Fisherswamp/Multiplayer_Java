@@ -1,13 +1,12 @@
 
 public class ServerRunner {
 
-	static int test = 0;
 	public static void main(String[] args) {
 		
-		ServerHub server = new ServerHub();
+		ServerHub server = new ServerHub("127.0.0.1",9696);
 		
 		
-		server.start();
+		System.out.println("Server Started: " + server.start());
 		
 	}
 
