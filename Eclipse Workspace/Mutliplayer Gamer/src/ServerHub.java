@@ -62,11 +62,10 @@ public class ServerHub implements Runnable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		isRunning = true;
 		serverThread = new Thread(this);
 		serverThread.start();
-		//receivePackets();
-		isRunning = true;
+		receivePackets();	
 		return true;
 	}
 	/**
