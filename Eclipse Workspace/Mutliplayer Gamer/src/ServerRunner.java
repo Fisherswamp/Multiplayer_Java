@@ -6,7 +6,8 @@ public class ServerRunner {
 		ServerHub server = new ServerHub("127.0.0.1",9696);
 		DatabaseManager db = new DatabaseManager();
 		
-		System.out.println("Server Started: " + server.start());
+		if(Settings.debug)
+			System.out.println("Server Started: " + server.start());
 		
 	}
 

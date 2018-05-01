@@ -30,7 +30,8 @@ public class DatabaseManager {
 		Class.forName(driver);
 		
 		Connection conn = DriverManager.getConnection(url,username,password);
-		System.out.println("Connected");
+		if(Settings.debug)
+			System.out.println("Connected");
 		
 		return conn;
 	}
@@ -48,6 +49,8 @@ public class DatabaseManager {
 						+ ")"
 		);
 		create.executeUpdate();
-		System.out.println("Table created");
+		
+		if(Settings.debug)
+			System.out.println("Table created");
 	}
 }
