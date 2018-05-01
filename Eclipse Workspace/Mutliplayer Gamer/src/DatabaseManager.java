@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DatabaseManager {
@@ -9,6 +10,7 @@ public class DatabaseManager {
 	public DatabaseManager(){
 		try {
 			connection = getConnection();
+			createTable();
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -31,5 +33,21 @@ public class DatabaseManager {
 		System.out.println("Connected");
 		
 		return conn;
+	}
+	
+	private void createTable() throws SQLException{
+		PreparedStatement create = connection.prepareStatement(
+				"CREATE TABLE IF NOT EXISTS "
+						+ "users("
+							+ "id int NOT NULL AUTO_INCREMENT,"
+							+ "username varchar(255),"
+							+ "password varchar(255),"
+							+ "salt varchar(255),"
+							+ "start_date datetime,"
+							+ "PRIMARY KEY(id)"
+						+ ")"
+		);
+		create.executeUpdate();
+		System.out.println("Table created");
 	}
 }
