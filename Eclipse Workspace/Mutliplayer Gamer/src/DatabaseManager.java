@@ -2,7 +2,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
+/**
+ * 
+ * @author Itai Rivkin-Fish
+ * @version 5/2/2018
+ */
 public class DatabaseManager {
 	
 	private Connection connection;
@@ -10,7 +14,8 @@ public class DatabaseManager {
 	public DatabaseManager(){
 		try {
 			connection = getConnection();
-			createTable();
+			createUserTable();
+			createMatchTable();
 			String addUser = "test";
 			while(userExists(addUser)){
 				addUser += "x";
@@ -22,6 +27,25 @@ public class DatabaseManager {
 		}
 	}
 	
+	public void setLoggedOn() throws SQLException{
+		
+	}
+	
+	/**
+	 * 
+	 * @param username Name of user to check if they are logged on
+	 * @return Whether or not the user is logged on
+	 * @throws SQLException
+	 */
+	public boolean isLoggedOn(String username) throws SQLException{
+		PreparedStatement check = connection.prepareStatement(
+				"SELECT * FROM users WHERE username = ? AND logged_on = 1"
+		);
+
+		check.setString(1, username);
+		
+		return check.executeQuery().next();
+	}
 	
 	/**
 	 * Get connection to mySQL server
@@ -42,15 +66,15 @@ public class DatabaseManager {
 		
 		Connection conn = DriverManager.getConnection(url,username,password);
 		if(Settings.debug)
-			System.out.println("Connected");
+			System.out.println("Connected to database");
 		
 		return conn;
 	}
 	/**
-	 * Creates database table, if it has not already been created
+	 * Creates user database table, if it has not already been created
 	 * @throws SQLException
 	 */
-	private void createTable() throws SQLException{
+	private void createUserTable() throws SQLException{
 		PreparedStatement create = connection.prepareStatement(
 				"CREATE TABLE IF NOT EXISTS "
 						+ "users("
@@ -59,7 +83,29 @@ public class DatabaseManager {
 							+ "password varchar(255),"
 							+ "salt varchar(255),"
 							+ "start_date datetime DEFAULT CURRENT_TIMESTAMP,"
-							+ "PRIMARY KEY(username)"
+							+ "profile_level int DEFAULT 1,"
+							+ "id int NOT NULL AUTO_INCREMENT,"
+							+ "logged_on  boolean DEFAULT 0,"						
+							+ "PRIMARY KEY(username),"
+							+ "KEY(id)"
+						+ ")"
+		);
+		create.executeUpdate();
+		
+		if(Settings.debug)
+			System.out.println("Table created");
+	}
+	
+	/**
+	 * Creates match database table, if it has not already been created
+	 * @throws SQLException
+	 */
+	private void createMatchTable() throws SQLException{
+		PreparedStatement create = connection.prepareStatement(
+				"CREATE TABLE IF NOT EXISTS "
+						+ "matches("
+							+ "id int NOT NULL AUTO_INCREMENT,"
+							+ "PRIMARY KEY(id)"
 						+ ")"
 		);
 		create.executeUpdate();
@@ -79,10 +125,8 @@ public class DatabaseManager {
 				"SELECT * FROM users WHERE username = ?"
 		);
 		check.setString(1, username);
-		if(check.executeQuery().next()){
-			return true;
-		}
-		return false;
+		
+		return check.executeQuery().next();
 	}
 	/**
 	 * 

@@ -18,15 +18,22 @@ public class clientInputWorker implements Runnable{
     
     public void run(){
         try {
+        	if(Settings.debug)
+        		System.out.println("ClientInputRunning");
+        	
         	InputStream input  = clientSocket.getInputStream();
 			BufferedReader in = new BufferedReader(new InputStreamReader(input));
         	OutputStream output = clientSocket.getOutputStream();
         	PrintWriter out = new PrintWriter(output,true);
 			
-			
+			String message = in.readLine();
+			System.out.println("From client: " + message);
+			out.write(message);
 			
 			output.close();
 	        input.close();
+	        in.close();
+	        out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

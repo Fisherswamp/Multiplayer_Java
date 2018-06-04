@@ -4,7 +4,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * 
+ * @author Itai Rivkin-Fish
+ * @version 5/2/2018
+ */
 public class ServerHub implements Runnable{
 	static final long BILLION = 1_000_000_000;
 	static final int packetRecieveSize = 2048;
@@ -32,6 +36,7 @@ public class ServerHub implements Runnable{
 	private void receivePackets(){
 		Thread packetThread = new Thread("Packet Listener"){
 			public void run(){
+				System.out.println("Is running: " + isRunning());
 				while(isRunning()){
 					try {	
 						Socket clientSocket = serverSocket.accept();
@@ -45,6 +50,7 @@ public class ServerHub implements Runnable{
 				}
 			}
 		};
+		packetThread.start();
 	}
 	
 	
@@ -62,7 +68,7 @@ public class ServerHub implements Runnable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		isRunning = true;
+		setRunning(true);
 		serverThread = new Thread(this);
 		serverThread.start();
 		receivePackets();	
@@ -79,7 +85,7 @@ public class ServerHub implements Runnable{
 			return false;
 		}
 		serverSocket.close();
-		isRunning = false;
+		setRunning(false);
 		serverThread.join();
 		return true;
 	}
@@ -127,5 +133,9 @@ public class ServerHub implements Runnable{
 	 */
 	private synchronized boolean isRunning(){
 		return this.isRunning;
+	}
+	
+	private synchronized void setRunning(Boolean running){
+		isRunning = running;
 	}
 }

@@ -1,4 +1,4 @@
 
 public class Settings {
-	public static boolean debug = false;
+	public static boolean debug = true;
 }
